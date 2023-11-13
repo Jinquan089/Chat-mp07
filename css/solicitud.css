@@ -1,0 +1,85 @@
+/* Estilos específicos para la página de solicitudes */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+nav {
+    margin-top: 20px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Estilos específicos para la lista de solicitudes */
+h2 {
+    margin-top: 20px;
+    color: #333;
+}
+
+.solicitud {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.solicitud a {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #3498db;
+    font-weight: bold;
+}
+
+.solicitud a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para el mensaje cuando no hay solicitudes */
+.sin-solicitudes {
+    color: #333;
+    margin-top: 10px;
+}
+
+/* Estilos para el enlace de volver */
+.volver {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #3498db;
+    font-weight: bold;
+}
