@@ -2,6 +2,7 @@
 // Inicia la sesión.
 session_start();
 include("../../connection.php");
+
 // Verifica si el usuario ha iniciado sesión, de lo contrario, redirige al inicio de sesión.
 if (!isset($_SESSION['user'])) {
     header("Location: ../../../login.php");
@@ -15,19 +16,16 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $request_id = $_GET['id'];
 
     // Realiza una consulta para verificar que la solicitud existe y está pendiente.
-    $sql = "SELECT id_solicitud FROM tbl_listaSolicitud WHERE id_solicitud = ? AND status = 'pendiente'";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "i", $request_id);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $row = mysqli_fetch_assoc($result);
+    $stmt_check = $conn->prepare("SELECT id_solicitud FROM tbl_listaSolicitud WHERE id_solicitud = :request_id AND status = 'pendiente'");
+    $stmt_check->bindParam(':request_id', $request_id);
+    $stmt_check->execute();
+    $result = $stmt_check->fetch();
 
-    if ($row) {
+    if ($result) {
         // Borra la solicitud de amistad.
-        $sql_delete = "DELETE FROM tbl_listaSolicitud WHERE id_solicitud = ?";
-        $stmt_delete = mysqli_prepare($conn, $sql_delete);
-        mysqli_stmt_bind_param($stmt_delete, "i", $request_id);
-        mysqli_stmt_execute($stmt_delete);
+        $stmt_delete = $conn->prepare("DELETE FROM tbl_listaSolicitud WHERE id_solicitud = :request_id");
+        $stmt_delete->bindParam(':request_id', $request_id);
+        $stmt_delete->execute();
 
         // Puedes mostrar un mensaje al usuario para informarle que la solicitud se ha eliminado.
         echo "Solicitud de amistad eliminada.";
@@ -46,7 +44,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 }
 
 // Cierra la conexión a la base de datos.
-mysqli_close($conn);
+$conn = null;
 ?>
 
 <!DOCTYPE html>

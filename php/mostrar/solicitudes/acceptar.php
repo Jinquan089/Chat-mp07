@@ -2,6 +2,7 @@
 // Inicia la sesión.
 session_start();
 include("../../connection.php");
+
 // Verifica si el usuario ha iniciado sesión, de lo contrario, redirige al inicio de sesión.
 if (!isset($_SESSION['user'])) {
     header("Location: ../../../login.php");
@@ -13,28 +14,26 @@ $username = $_SESSION['user'];
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $request_id = $_GET['id'];
     $user_id = $_SESSION['id_user'];
-    // Realiza una consulta para verificar que la solicitud existe y está pendiente.
-    $sql = "SELECT id_solicitud, id_enviador FROM tbl_listaSolicitud WHERE id_solicitud = ? AND status = 'pendiente'";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "i", $request_id);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $row = mysqli_fetch_assoc($result);
 
-    if ($row) {
-        $enviador_id = $row['id_enviador'];
+    // Realiza una consulta para verificar que la solicitud existe y está pendiente.
+    $stmt_check = $conn->prepare("SELECT id_solicitud, id_enviador FROM tbl_listaSolicitud WHERE id_solicitud = :request_id AND status = 'pendiente'");
+    $stmt_check->bindParam(':request_id', $request_id);
+    $stmt_check->execute();
+    $resultcheck = $stmt_check->fetch();
+
+    if ($resultcheck) {
+        $enviador_id = $resultcheck['id_enviador'];
 
         // Actualiza el estado de la solicitud a 'aceptado'.
-        $sql_update = "UPDATE tbl_listaSolicitud SET status = 'aceptado' WHERE id_solicitud = ?";
-        $stmt_update = mysqli_prepare($conn, $sql_update);
-        mysqli_stmt_bind_param($stmt_update, "i", $request_id);
-        mysqli_stmt_execute($stmt_update);
+        $stmt_update = $conn->prepare("UPDATE tbl_listaSolicitud SET status = 'aceptado' WHERE id_solicitud = :request_id");
+        $stmt_update->bindParam(':request_id', $request_id);
+        $stmt_update->execute();
 
         // Agrega una entrada en la tabla tbl_listaAmistad para establecer la relación de amistad.
-        $sql_insert_amistad = "INSERT INTO tbl_listaAmistad (id_user1, id_user2, status) VALUES (?, ?, 'aceptado')";
-        $stmt_insert_amistad = mysqli_prepare($conn, $sql_insert_amistad);
-        mysqli_stmt_bind_param($stmt_insert_amistad, "ii", $enviador_id, $user_id);
-        mysqli_stmt_execute($stmt_insert_amistad);
+        $stmt_insert_amistad = $conn->prepare("INSERT INTO tbl_listaAmistad (id_user1, id_user2, status) VALUES (:enviador_id, :user_id, 'aceptado')");
+        $stmt_insert_amistad->bindParam(':enviador_id', $enviador_id);
+        $stmt_insert_amistad->bindParam(':user_id', $user_id);
+        $stmt_insert_amistad->execute();
 
         // Puedes mostrar un mensaje al usuario para informarle que la solicitud se ha aceptado.
         echo "Solicitud de amistad aceptada con éxito.";
@@ -53,8 +52,9 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 }
 
 // Cierra la conexión a la base de datos.
-mysqli_close($conn);
+$conn = null;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

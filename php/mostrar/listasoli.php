@@ -13,37 +13,35 @@ include("../connection.php");
 
 $user = $_SESSION['user'];
 
-// Consulta SQL para recuperar las solicitudes de amistad pendientes para el usuario actual.
-$sql = "SELECT S.id_solicitud, U.username
-        FROM tbl_listaSolicitud AS S
-        INNER JOIN tbl_users AS U ON S.id_enviador = U.id_user
-        WHERE S.id_receptor = (SELECT id_user FROM tbl_users WHERE username = ?) 
-        AND S.status = 'pendiente'";
+try {
+    // Consulta SQL para recuperar las solicitudes de amistad pendientes para el usuario actual.
+    $stmt = $conn->prepare("SELECT S.id_solicitud, U.username
+    FROM tbl_listaSolicitud AS S
+    INNER JOIN tbl_users AS U ON S.id_enviador = U.id_user
+    WHERE S.id_receptor = (SELECT id_user FROM tbl_users WHERE username = :user) 
+    AND S.status = 'pendiente'");
+    $stmt->bindParam(':user', $user);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
 
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "s", $user);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-
-// Utiliza un bucle foreach para recorrer los resultados
-if (mysqli_num_rows($result) > 0) {
-    foreach ($result as $row) {
-        echo "Solicitud de amistad de: " . $row['username'];
-        echo "       ";
-        echo "<a href='./solicitudes/acceptar.php?id=" . $row['id_solicitud'] . "'>Aceptar</a>";
-        echo "       ";
-        echo "<a href='./solicitudes/rechazar.php?id=" . $row['id_solicitud'] . "'>Rechazar</a><br>";
+    // Utiliza un bucle foreach para recorrer los resultados
+    if (count($result) > 0) {
+        foreach ($result as $row) {
+            echo "<p>Solicitud de amistad de: " . $row['username'] . "</p>";
+            echo "<a href='./solicitudes/acceptar.php?id=" . $row['id_solicitud'] . "'>Aceptar</a>";
+            echo "       ";
+            echo "<a href='./solicitudes/rechazar.php?id=" . $row['id_solicitud'] . "'>Rechazar</a><br>";
+        }
+    } else {
+        echo "<p>No tienes solicitudes</p>";
     }
-} else {
-    echo "No tienes solicitudes";
+
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
 
-
-// Cierra la sentencia preparada
-mysqli_stmt_close($stmt);
-
 // Cierra la conexión a la base de datos.
-mysqli_close($conn);
+$conn = null;
 ?>
 
 <!DOCTYPE html>
@@ -55,8 +53,7 @@ mysqli_close($conn);
     <title>Lista de solicitudes</title>
 </head>
 <body>
+    <br>
+    <a href='../mostrar.php'>Volver</a>
 </body>
 </html>
-<?php
-echo "<br>";
-echo "<a href='../mostrar.php'>Volver</a>";

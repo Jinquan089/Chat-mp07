@@ -13,13 +13,15 @@ include("../connection.php");
 if (isset($_GET['id'])) {
     $amigoId = $_GET['id'];
     $name = $_GET['name'];
-    function enviarMensaje($conn, $id_enviador, $id_receptor, $texto_mensaje) {
-        $sql = "INSERT INTO tbl_mensaje (id_enviador, id_receptor, texto_mensaje, timestamp) VALUES (?, ?, ?, NOW())";
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "iis", $id_enviador, $id_receptor, $texto_mensaje);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+    function enviarMensaje($conn, $id_enviador, $amigoId, $texto_mensaje) {
+
+        $stmt = $conn->prepare("INSERT INTO tbl_mensaje (id_enviador, id_receptor, texto_mensaje, timestamp) VALUES (:id_enviador, :id_receptor, :texto_mensaje, NOW())");
+        $stmt->bindParam(':id_enviador', $id_enviador);
+        $stmt->bindParam(':id_receptor', $amigoId);
+        $stmt->bindParam(':texto_mensaje', $texto_mensaje);
+        $stmt->execute();
     }
+
     // Procesar el envío de mensajes si se ha enviado el formulario
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['mensaje'])) {
         $id_enviador = $_SESSION['id_user'];
@@ -35,18 +37,16 @@ if (isset($_GET['id'])) {
 
     // Función para cargar mensajes
     function cargarMensajes($conn, $id_enviador, $id_receptor) {
-        $sql = "SELECT *
-                FROM tbl_mensaje AS M
-                INNER JOIN tbl_users AS U ON M.id_enviador = U.id_user
-                WHERE (M.id_enviador = ? AND M.id_receptor = ?) OR (M.id_enviador = ? AND M.id_receptor = ?)
-                ORDER BY M.timestamp DESC"; // Cambiado a ASC para mostrar los mensajes en orden cronológico
+        $stmt = $conn->prepare("SELECT M.*, U.username FROM tbl_mensaje AS M
+        INNER JOIN tbl_users AS U ON M.id_enviador = U.id_user
+        WHERE (M.id_enviador = :id_enviador AND M.id_receptor = :id_receptor) OR (M.id_enviador = :id_receptor AND M.id_receptor = :id_enviador)
+        ORDER BY M.timestamp DESC");
+        $stmt->bindParam(':id_enviador', $id_enviador);
+        $stmt->bindParam(':id_receptor', $id_receptor);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
 
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "iiii", $id_enviador, $id_receptor, $id_receptor, $id_enviador);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-
-        while ($row = mysqli_fetch_assoc($result)) {
+        foreach ($result as $row) {
             if ($row['id_enviador'] == $_SESSION['id_user']) {
                 $mensajeClass = 'mensaje-usuario';
             } else {
@@ -56,8 +56,6 @@ if (isset($_GET['id'])) {
             echo "<p>{$row['username']} ({$row['timestamp']}): " . htmlspecialchars($row['texto_mensaje']) . "</p>";
             echo "</div>";
         }
-
-        mysqli_stmt_close($stmt);
     }
 ?>
 
@@ -73,24 +71,21 @@ if (isset($_GET['id'])) {
     <h2 style="text-align: center;">Chat con <?php echo htmlspecialchars($name); ?></h2>
 
     <div id="chat">
-    <form method="post" action="">
+        <form method="post" action="">
             <input type="text" name="mensaje" placeholder="Escribe tu mensaje" required>
             <button type="submit">Enviar</button>
         </form>
         <br>
-            <div id="mensajes">
-                <?php cargarMensajes($conn, $_SESSION['id_user'], $amigoId); ?>
-            </div>
-        
+        <div id="mensajes">
+            <?php cargarMensajes($conn, $_SESSION['id_user'], $amigoId); ?>
+        </div>
     </div>
     <a href="./listaamigo.php">Volver</a>
-
-    <?php
-    // Cierra la conexión a la base de datos.
-    mysqli_close($conn);
-    ?>
 </body>
 </html>
+
 <?php
 }
+// Cerrar la conexión a la base de datos.
+$conn = null;
 ?>
