@@ -8,14 +8,6 @@ CREATE TABLE tbl_users (
     nom_real VARCHAR(100) NOT NULL
 );
 
-/* Lista de amistad para saber si las 2 personas son amigos */
-CREATE TABLE tbl_listaAmistad (
-    id_listaAmistad INT AUTO_INCREMENT PRIMARY KEY,
-    id_user1 INT NOT NULL,
-    id_user2 INT NOT NULL,
-    status ENUM('pendiente', 'aceptado') NOT NULL
-);
-
 CREATE TABLE tbl_mensaje (
     id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
     id_enviador INT NOT NULL,
@@ -33,11 +25,6 @@ CREATE TABLE tbl_listaSolicitud (
     status ENUM('pendiente', 'aceptado', 'rechazado') NOT NULL
 );
 
-/* Relación entre la tabla "tbl_listaAmistad" y "tbl_users" */
-ALTER TABLE tbl_listaAmistad
-ADD FOREIGN KEY (id_user1) REFERENCES tbl_users(id_user),
-ADD FOREIGN KEY (id_user2) REFERENCES tbl_users(id_user);
-
 /* Relación entre la tabla "tbl_mensaje" y "tbl_users" */
 ALTER TABLE tbl_mensaje
 ADD FOREIGN KEY (id_enviador) REFERENCES tbl_users(id_user),
@@ -49,7 +36,7 @@ ADD FOREIGN KEY (id_enviador) REFERENCES tbl_users(id_user),
 ADD FOREIGN KEY (id_receptor) REFERENCES tbl_users(id_user);
 
 
-DELIMITER //
+/* DELIMITER //
 CREATE TRIGGER before_delete_user
 BEFORE DELETE ON tbl_users
 FOR EACH ROW
@@ -59,4 +46,4 @@ BEGIN
     DELETE FROM tbl_mensaje WHERE id_enviador = OLD.id_user OR id_receptor = OLD.id_user;
 END;
 //
-DELIMITER ;
+DELIMITER ; */

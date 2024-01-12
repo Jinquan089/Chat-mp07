@@ -29,12 +29,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         $stmt_update->bindParam(':request_id', $request_id);
         $stmt_update->execute();
 
-        // Agrega una entrada en la tabla tbl_listaAmistad para establecer la relación de amistad.
-        $stmt_insert_amistad = $conn->prepare("INSERT INTO tbl_listaAmistad (id_user1, id_user2, status) VALUES (:enviador_id, :user_id, 'aceptado')");
-        $stmt_insert_amistad->bindParam(':enviador_id', $enviador_id);
-        $stmt_insert_amistad->bindParam(':user_id', $user_id);
-        $stmt_insert_amistad->execute();
-
         // Puedes mostrar un mensaje al usuario para informarle que la solicitud se ha aceptado.
         echo "Solicitud de amistad aceptada con éxito.";
         echo "<br>";

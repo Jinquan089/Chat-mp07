@@ -5,14 +5,8 @@ if (!isset($_SESSION['user'])) {
     header("Location: ./login.php");
     exit;
 }
-
-// Carga información del usuario desde la base de datos (esto puede variar según tu base de datos y estructura).
+include("./connection.php");
 $user_id = $_SESSION['user'];
-// Realiza una consulta SQL para obtener la información del usuario, por ejemplo, username, nombre, imagen de perfil, etc.
-
-// Aquí puedes realizar la consulta a la base de datos y obtener los datos del usuario.
-
-// HTML de la página de dashboard.
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -20,9 +14,15 @@ $user_id = $_SESSION['user'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <title>Home</title>
 </head>
 <body>
+    <div>
+
+    </div>
     <div class="container">
         <header class="header">
             <h1>Bienvenido, <?php echo $user_id; ?></h1>
@@ -35,7 +35,49 @@ $user_id = $_SESSION['user'];
                 <li><a href="./mostrar/cerrar.php">Cerrar Sesión</a></li>
             </ul>
         </nav>
-        <!-- Otras secciones y contenido específico de tu aplicación -->
+    </div>´
+    <div>
+        <button id="botonSolicitud"></button>
     </div>
+    <div id="lista-amigos">
+        <div>
+            <form action="" method="post" id="frmbusqueda">
+                <div class="form-group">
+                    <label for="buscar">Buscar: </label><br>
+                    <input type="text" name="buscar" id="buscar" placeholder="Buscar..." class="form-control">
+                </div>
+            </form>
+        </div>
+        <div>
+            <table class="table table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>Amigos</th>
+                    </tr>
+                </thead>
+                <tbody id="resultado">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <h2 style="text-align: center;" id="personachat"></h2>
+        <div id="chat">
+            <div id="mensajes">
+                <div class='mensaje' id="estilo">
+                    <p id="mensajesuser"></p>
+                    <p id="mensajetiempo"></p>
+                </div>
+            </div>
+            <form id="formulario-mensaje">
+            </form>
+            <br>
+        </div>
+    </div>
+<body>
 </body>
 </html>
+
+<script src="../ajax/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

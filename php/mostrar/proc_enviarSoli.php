@@ -9,9 +9,7 @@ $user_id = $_SESSION['id_user'];
 $id_user_destino = $_POST['id_user_destino'];
 
 // Verificar si ya existe una solicitud pendiente entre los dos usuarios
-$stmt_verificar = $conn->prepare("SELECT * FROM tbl_listaSolicitud 
-WHERE (id_enviador = :user_id AND id_receptor = :id_user_destino) 
-OR (id_enviador = :id_user_destino AND id_receptor = :user_id)");
+$stmt_verificar = $conn->prepare("SELECT * FROM tbl_listaSolicitud WHERE (id_enviador = :user_id AND id_receptor = :id_user_destino) OR (id_enviador = :id_user_destino AND id_receptor = :user_id)");
 $stmt_verificar->bindParam(':user_id', $user_id);
 $stmt_verificar->bindParam(':id_user_destino', $id_user_destino);
 $stmt_verificar->execute();

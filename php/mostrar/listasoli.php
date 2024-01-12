@@ -15,11 +15,7 @@ $user = $_SESSION['user'];
 
 try {
     // Consulta SQL para recuperar las solicitudes de amistad pendientes para el usuario actual.
-    $stmt = $conn->prepare("SELECT S.id_solicitud, U.username
-    FROM tbl_listaSolicitud AS S
-    INNER JOIN tbl_users AS U ON S.id_enviador = U.id_user
-    WHERE S.id_receptor = (SELECT id_user FROM tbl_users WHERE username = :user) 
-    AND S.status = 'pendiente'");
+    $stmt = $conn->prepare("SELECT S.id_solicitud, U.username FROM tbl_listaSolicitud AS S INNER JOIN tbl_users AS U ON S.id_enviador = U.id_user WHERE S.id_receptor = (SELECT id_user FROM tbl_users WHERE username = :user) AND S.status = 'pendiente'");
     $stmt->bindParam(':user', $user);
     $stmt->execute();
     $result = $stmt->fetchAll();
