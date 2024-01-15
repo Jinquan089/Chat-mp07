@@ -1,4 +1,4 @@
-body {
+/* body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -12,8 +12,8 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    height: 80vh; /* Modifica la altura del contenedor de chat según tus necesidades */
-    overflow-y: auto; /* Agregado para permitir desplazamiento vertical si es necesario */
+    height: 80vh;
+    overflow-y: auto;
 }
 
 #mensajes {
@@ -68,4 +68,4 @@ a {
     text-decoration: none;
     text-align: center;
 }
-    
+     */

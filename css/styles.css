@@ -1,12 +1,10 @@
-/* Estilo básico para el cuerpo de la página */
-body {
+/* body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
 }
 
-/* Estilo para el contenedor principal */
 .container {
     max-width: 800px;
     margin: 20px auto;
@@ -15,7 +13,6 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo para el encabezado */
 .header {
     background-color: #4CAF50;
     color: #fff;
@@ -23,7 +20,6 @@ body {
     text-align: center;
 }
 
-/* Estilo para la barra de navegación */
 nav {
     margin-top: 20px;
 }
@@ -45,7 +41,6 @@ nav ul li a {
     font-weight: bold;
 }
 
-/* Estilo para los formularios */
 form {
     margin-top: 20px;
 }
@@ -66,7 +61,6 @@ input[type="submit"] {
     cursor: pointer;
 }
 
-/* Estilo para mensajes de confirmación y error */
 span {
     display: block;
     margin-top: 10px;
@@ -77,7 +71,6 @@ span {
     border-radius: 4px;
 }
 
-/* Estilo para la lista de amigos */
 h2 {
     margin-top: 20px;
     color: #333;
@@ -87,7 +80,6 @@ p {
     margin-bottom: 10px;
 }
 
-/* Estilo para enlaces en la lista de amigos */
 a {
     color: #3498db;
     text-decoration: none;
@@ -96,3 +88,4 @@ a {
 a:hover {
     text-decoration: underline;
 }
+ */

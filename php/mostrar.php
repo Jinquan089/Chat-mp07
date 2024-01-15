@@ -13,16 +13,13 @@ $user_id = $_SESSION['user'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../css/styles.css">
+    <link rel="stylesheet" type="text/css" href="../css/styles2.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <title>Home</title>
 </head>
 <body>
-    <div>
-
-    </div>
     <div class="container">
         <header class="header">
             <h1>Bienvenido, <?php echo $user_id; ?></h1>
@@ -35,10 +32,19 @@ $user_id = $_SESSION['user'];
                 <li><a href="./mostrar/cerrar.php">Cerrar Sesión</a></li>
             </ul>
         </nav>
-    </div>´
-    <div>
-        <button id="botonSolicitud"></button>
     </div>
+    <form id="formBuscarUsuarios">
+        <label for="search_user">Buscar por Username o Nombre Real:</label> <br>
+        <input type="text" id="search_user" name="search_user" required>
+        <input type="submit" value="Buscar" id="soli_buscar">
+    </form>
+    <button id="listasolicitud">Lista Solicitudes</button>
+    <div id="listasolicitudes"></div>
+    <!-- Contenedor para mostrar los resultados de búsqueda -->
+    <div id="mostrarUsuarios"></div>
+    <form>
+        <div id="usuariosbuscados"></div>
+    </form>
     <div id="lista-amigos">
         <div>
             <form action="" method="post" id="frmbusqueda">
@@ -56,7 +62,6 @@ $user_id = $_SESSION['user'];
                     </tr>
                 </thead>
                 <tbody id="resultado">
-
                 </tbody>
             </table>
         </div>

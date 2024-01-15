@@ -8,7 +8,50 @@ buscar.addEventListener("keyup", ()=>{
     }
 })
 
+// Agrega un evento al campo de búsqueda para interceptar cambios
+document.getElementById("soli_buscar").addEventListener("click", function (event) {
+    event.preventDefault();
+    var searchTerm = document.getElementById("search_user").value;
+    buscarUsuariosAJAX(searchTerm);
+});
+
+// Función para realizar la búsqueda AJAX
+function buscarUsuariosAJAX(searchTerm) {
+
+    var formdata = new FormData();
+    formdata.append('buscar', searchTerm);
+
+    var ajax = new XMLHttpRequest();
+    ajax.open('POST', '../php/mostrar/enviarsoli.php');
+    
+    ajax.onload = function () {
+        if (ajax.status == 200) {
+            var json = JSON.parse(ajax.responseText);
+            console.log(json);
+            var formulario = "";
+            json.forEach(function (item) {
+                formulario += "<br> - Username: " + item.username + " - Nombre Real: " + item.nom_real + "<br>";
+                formulario += "<input type='hidden' name='id_user_destino' value='" + item.id_user + "'id=" + item.id_user + ">";
+                formulario += "<input type='submit' class='enviarSoli' value='Enviar Solicitud de Amistad'>";
+            });
+            document.getElementById("usuariosbuscados").innerHTML = formulario;
+
+            var btnEnviarSoli = document.querySelectorAll('.enviarSoli');
+            btnEnviarSoli.forEach(function (input) {
+                input.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var solicitudId = this.previousElementSibling.value;
+                    enviarSolicitud(solicitudId);
+                    buscarUsuariosAJAX(searchTerm);
+                });
+            });
+        }
+    }
+    ajax.send(formdata);
+}
+
 listaamigo('')
+
 // Listar productos
 function listaamigo(valor) {
     var resultado = document.getElementById('resultado');
@@ -25,7 +68,6 @@ function listaamigo(valor) {
             var tabla = "";
             json.forEach(function (item) {
                 str = "<tr><td><button class='chat-button' data-id='" + item.id_user + "'>" + item.username + "</button></td>";
-                str += "<td><button type='button' class='btn btn-danger' onclick=" + "Eliminar(" + item.id + ")>Eliminar</button></td>";
                 str += "</tr>";
                 tabla += str;
             });
@@ -45,12 +87,104 @@ function listaamigo(valor) {
     ajax.send(formdata);
 }
 
-/* BOTON SOLICITUDES DE AMISTAD */
-function mostrarSolicitud(params) {
+
+/* BOTON ENVIAR SOLICITUD */
+function enviarSolicitud(solicitudId) {
     
+    var formdata = new FormData();
+    formdata.append('id_user_destino', solicitudId);
+
+    var ajax = new XMLHttpRequest();
+    ajax.open('POST', '../php/mostrar/proc_enviarSoli.php');
+
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            Swal.fire({
+                title: "Enviado",
+                text: "Solicitud enviada",
+                icon: "success"
+            });
+        }
+    }
+    ajax.send(formdata);
 }
 
+    
+/* BOTON SOLICITUDES DE AMISTAD */
 
+var listasolicitud = document.getElementById("listasolicitud")
+listasolicitud.addEventListener("click", function (event) {
+    event.preventDefault();
+    mostrarSolicitud();
+});
+
+/* LISTA DE MOSTRAR SOLICITUDES */
+
+function mostrarSolicitud() {
+    var ajax = new XMLHttpRequest();
+    ajax.open('POST', '../php/mostrar/listasoli.php');
+
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            var json = JSON.parse(ajax.responseText);
+            document.getElementById('listasolicitudes').innerHTML = json;
+            // Agrega eventos de clic a los botones de aceptar
+            var btnAceptar = document.querySelectorAll('button[name="aceptar"]');
+            btnAceptar.forEach(function(btn) {
+                btn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var solicitudId = this.getAttribute('id');
+                    procesarSolicitud(solicitudId, 'aceptar');
+                });
+            });
+
+            // Agrega eventos de clic a los botones de rechazar
+            var btnRechazar = document.querySelectorAll('button[name="rechazar"]');
+            btnRechazar.forEach(function(btn) {
+                btn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var solicitudId = this.getAttribute('id');
+                    procesarSolicitud(solicitudId, 'rechazar');
+                });
+            });
+        }
+    };
+    ajax.send();
+}
+
+/* PROCESSAR SOLICITUDES */
+function procesarSolicitud(solicitudId, accion) {
+    var formdata = new FormData();
+    formdata.append('id', solicitudId);
+    formdata.append('accion', accion);
+
+    var ajax = new XMLHttpRequest();
+    ajax.open('POST', '../php/mostrar/proc_soli.php');
+
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            if (accion === "aceptar") {
+                Swal.fire({
+                    title: "Aceptar",
+                    text: "Ya sois amigos",
+                    icon: "success"
+                });
+            } else {
+                Swal.fire({
+                    title: "Rechazar",
+                    text: "No sois amigos",
+                    icon: "error"
+                });
+            }
+            mostrarSolicitud();
+            listaamigo("");
+        } else {
+            console.error('Error en la solicitud AJAX para ' + accion);
+        }
+    };
+    
+    ajax.send(formdata);
+}
 
 /* MOSTRAR CHAT */
 
@@ -65,10 +199,11 @@ function chat(userId) {
     ajax.onload = function() {
         if (ajax.status == 200) {
             var json = JSON.parse(ajax.responseText);
-            console.log(json);
             var mensajesHTML = '';
             json.forEach(function (item) {
-                document.getElementById("personachat").innerText = "Chat con " + item.username;
+                if (userId !== item.id_receptor) {
+                    document.getElementById("personachat").innerText = "Chat con " + item.username;
+                }
                 var timestamp = item.timestamp || '';
                 var textoMensaje = item.texto_mensaje || '';
                 mensajesHTML += timestamp + "<br>" + textoMensaje + "<br>";
@@ -81,14 +216,30 @@ function chat(userId) {
             "><input type='text' id='mensaje' name='mensaje' placeholder='Escribe tu mensaje' required> <input type='submit' id='enviarmensaje'>"
             document.getElementById("enviarmensaje").addEventListener("click", (event) => {
                 event.preventDefault();
-                var mensaje = document.getElementById("mensaje").value;
-                var userIdValue = userId;
-                console.log(userIdValue);
-                console.log(mensaje);
+                var mensaje = document.getElementById("mensaje");
+                enviarmensaje(userId, mensaje.value);
+                mensaje.value = '';
             });
+        }
+    }
+    ajax.send(formdata);
+
+}
+
+/* ENVIAR CHAT */
+
+function enviarmensaje(userId, mensaje) {
+    var formdata = new FormData();
+    formdata.append('id_user', userId);
+    formdata.append('mensaje', mensaje);
+
+    var ajax = new XMLHttpRequest();
+    ajax.open('POST', '../php/mostrar/proc_chat.php');
+
+    ajax.onload = function() {
+        if (ajax.status == 200) {
+            chat(userId)
         }
     }   
     ajax.send(formdata);
 }
-
-/* ENVIAR CHAT */

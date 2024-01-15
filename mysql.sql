@@ -34,16 +34,3 @@ ADD FOREIGN KEY (id_receptor) REFERENCES tbl_users(id_user);
 ALTER TABLE tbl_listaSolicitud
 ADD FOREIGN KEY (id_enviador) REFERENCES tbl_users(id_user),
 ADD FOREIGN KEY (id_receptor) REFERENCES tbl_users(id_user);
-
-
-/* DELIMITER //
-CREATE TRIGGER before_delete_user
-BEFORE DELETE ON tbl_users
-FOR EACH ROW
-BEGIN
-    DELETE FROM tbl_listaamistad WHERE id_user1 = OLD.id_user OR id_user2 = OLD.id_user;
-    DELETE FROM tbl_listasolicitud WHERE id_enviador = OLD.id_user OR id_receptor = OLD.id_user;
-    DELETE FROM tbl_mensaje WHERE id_enviador = OLD.id_user OR id_receptor = OLD.id_user;
-END;
-//
-DELIMITER ; */

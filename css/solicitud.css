@@ -1,5 +1,4 @@
-/* Estilos específicos para la página de solicitudes */
-
+/* 
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
@@ -43,7 +42,6 @@ nav ul li a {
     font-weight: bold;
 }
 
-/* Estilos específicos para la lista de solicitudes */
 h2 {
     margin-top: 20px;
     color: #333;
@@ -68,13 +66,11 @@ h2 {
     text-decoration: underline;
 }
 
-/* Estilos para el mensaje cuando no hay solicitudes */
 .sin-solicitudes {
     color: #333;
     margin-top: 10px;
 }
 
-/* Estilos para el enlace de volver */
 .volver {
     display: block;
     margin-top: 20px;
@@ -83,3 +79,4 @@ h2 {
     color: #3498db;
     font-weight: bold;
 }
+ */

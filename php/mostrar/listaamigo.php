@@ -8,7 +8,7 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-// Conexión a la base de datos (debes configurar esto según tu entorno).
+// Conexión a la base de datos.
 include("../connection.php");
 
 $user = $_SESSION['user'];

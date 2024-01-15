@@ -1,0 +1,153 @@
+/* Reset de estilos básicos */
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo general de la aplicación */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Encabezado de la aplicación */
+.header {
+    background-color: #075e54;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Barra de navegación */
+nav {
+    background-color: #128c7e;
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Formulario de búsqueda */
+#formBuscarUsuarios {
+    margin-top: 20px;
+}
+
+/* Resultados de búsqueda de usuarios */
+#usuariosbuscados {
+    margin-top: 20px;
+}
+
+/* Lista de amigos */
+#lista-amigos {
+    margin-top: 20px;
+}
+
+/* Tabla de amigos */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Chat */
+#personachat {
+    text-align: center;
+    background-color: #075e54;
+    color: #ffffff;
+    padding: 10px;
+}
+
+#chat {
+    margin-top: 20px;
+}
+
+#mensajes {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow-y: scroll;
+    max-height: 200px;
+}
+
+.mensaje {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.mensaje.propio {
+    color: #006400; /* Color del texto verde oscuro */
+    text-align: right;
+}
+
+.mensaje.otro {
+    color: #007BFF; /* Color del texto celeste oscuro */
+    text-align: left;
+}
+
+#formulario-mensaje {
+    display: flex;
+    margin-top: 10px;
+}
+
+#formulario-mensaje input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    margin-right: 5px;
+}
+
+#formulario-mensaje input[type="submit"] {
+    background-color: #128c7e;
+    color: #ffffff;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* Estilos para SweetAlert2 */
+.swal2-popup {
+    font-size: 1rem !important;
+}
+
+/* Estilos para los botones de aceptar y rechazar */
+button[name="aceptar"], button[name="rechazar"] {
+    background-color: #128c7e;
+    color: #ffffff;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* Estilos para el botón de enviar solicitud */
+.enviarSoli {
+    background-color: #128c7e;
+    color: #ffffff;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+}
